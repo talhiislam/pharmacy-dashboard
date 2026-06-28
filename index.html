@@ -307,6 +307,12 @@
       <div class="ni" onclick="go('create',this)">
         <div class="ni-ic"><i class="fa-solid fa-plus"></i></div><span id="n_add">إضافة صيدلاني</span>
       </div>
+      <div class="ni" onclick="go('labs',this)">
+        <div class="ni-ic"><i class="fa-solid fa-flask"></i></div><span>المخابر</span>
+      </div>
+      <div class="ni" onclick="go('consultations',this)">
+        <div class="ni-ic"><i class="fa-solid fa-user-md"></i></div><span>الاستشارات الطبية</span>
+      </div>
     </nav>
     <div class="sb-foot">
       <div class="u-info">
@@ -442,9 +448,6 @@
         <div class="toolbar">
           <div class="toolbar-t" id="i_title"><i class="fa-solid fa-box"></i> مخزن المنتجات</div>
           <div class="t-acts">
-            <select id="inv-pf" class="fg" style="margin:0;padding:8px 12px;border-radius:9px;background:var(--bg);border:1px solid var(--brd);color:var(--text);font-family:Cairo,sans-serif;font-size:13px;cursor:pointer" onchange="loadInv()">
-              <option value="">كل الصيدليات</option>
-            </select>
             <div class="srch"><input type="text" id="i_search" placeholder="بحث بالمنتج..." oninput="renderInv()" /></div>
             <button class="btn btn-primary-sm" id="i_add_btn" onclick="openAddInv()"><i class="fa-solid fa-plus"></i> إضافة منتج</button>
           </div>
@@ -458,8 +461,8 @@
         <div class="card">
           <div class="twrap">
             <table>
-              <thead><tr><th id="th_prod">المنتج</th><th id="th_cat">التصنيف</th><th id="th_ph3">الصيدلية</th><th id="th_qty">الكمية</th><th id="th_pr">السعر</th><th id="th_st4">حالة المخزون</th><th id="th_act3">الإجراءات</th></tr></thead>
-              <tbody id="inv-tbody"><tr><td colspan="7"><div class="lc"><div class="spin"></div></div></td></tr></tbody>
+              <thead><tr><th id="th_prod">المنتج</th><th id="th_cat">التصنيف</th><th id="th_qty">الكمية</th><th id="th_pr">السعر</th><th id="th_st4">حالة المخزون</th><th id="th_act3">الإجراءات</th></tr></thead>
+              <tbody id="inv-tbody"><tr><td colspan="6"><div class="lc"><div class="spin"></div></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -493,6 +496,53 @@
         </div>
       </div>
 
+      <!-- LABS -->
+      <div class="page" id="page-labs">
+        <div class="toolbar">
+          <div class="toolbar-t"><i class="fa-solid fa-flask"></i> المخابر</div>
+          <div class="t-acts">
+            <div class="srch"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="lab_search" placeholder="بحث..." oninput="renderLabs()" /></div>
+          </div>
+        </div>
+        <div class="ftabs">
+          <button class="ftab active" onclick="setLF('all',this)">الكل</button>
+          <button class="ftab" onclick="setLF('approved',this)"><i class="fa-solid fa-check"></i> مقبول</button>
+          <button class="ftab" onclick="setLF('pending',this)"><i class="fa-solid fa-hourglass-half"></i> بانتظار الموافقة</button>
+          <button class="ftab" onclick="setLF('rejected',this)"><i class="fa-solid fa-xmark"></i> مرفوض</button>
+        </div>
+        <div class="card">
+          <div class="twrap">
+            <table>
+              <thead><tr><th>المخبر</th><th>اسم المخبر</th><th>العنوان</th><th>الهاتف</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+              <tbody id="lab-tbody"><tr><td colspan="6"><div class="lc"><div class="spin"></div></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONSULTATIONS -->
+      <div class="page" id="page-consultations">
+        <div class="toolbar">
+          <div class="toolbar-t"><i class="fa-solid fa-user-md"></i> الاستشارات الطبية</div>
+          <div class="t-acts">
+            <div class="srch"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="cons_search" placeholder="بحث..." oninput="renderConsultations()" /></div>
+          </div>
+        </div>
+        <div class="ftabs">
+          <button class="ftab active" onclick="setCF('all',this)">الكل</button>
+          <button class="ftab" onclick="setCF('paid',this)"><i class="fa-solid fa-money-bill"></i> مدفوعة</button>
+          <button class="ftab" onclick="setCF('skipped',this)"><i class="fa-solid fa-forward"></i> متخطى</button>
+        </div>
+        <div class="card">
+          <div class="twrap">
+            <table>
+              <thead><tr><th>تاريخ الطلب</th><th>المريض</th><th>الدفع</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+              <tbody id="cons-tbody"><tr><td colspan="5"><div class="lc"><div class="spin"></div></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
@@ -501,7 +551,6 @@
 <div class="moverlay" id="m-add-inv">
   <div class="modal">
     <div class="modal-title" id="mi_title"><i class="fa-solid fa-box"></i> إضافة منتج جديد</div>
-    <div class="fg"><label id="lbl_mi_ph">الصيدلية *</label><select id="mi-pharma"></select></div>
     <div class="g2">
       <div class="fg"><label id="lbl_mi_name">اسم المنتج *</label><input type="text" id="mi-name" placeholder="باراسيتامول 500mg" /></div>
       <div class="fg"><label id="lbl_mi_cat">التصنيف *</label><input type="text" id="mi-cat" placeholder="مسكن ألم" /></div>
@@ -538,21 +587,65 @@
   </div>
 </div>
 
+<!-- MODAL: View Files -->
+<div class="moverlay" id="m-view-files">
+  <div class="modal">
+    <div class="modal-title" id="vf_title"><i class="fa-solid fa-folder-open"></i> ملفات الصيدلاني</div>
+    <div class="g2">
+      <div class="fg">
+        <label id="lbl_vf_id">بطاقة الهوية</label>
+        <div id="vf-id-container" style="border:1px solid var(--brd);border-radius:9px;padding:8px;text-align:center;background:var(--bg)"></div>
+      </div>
+      <div class="fg">
+        <label id="lbl_vf_cert">الشهادة المهنية</label>
+        <div id="vf-cert-container" style="border:1px solid var(--brd);border-radius:9px;padding:8px;text-align:center;background:var(--bg)"></div>
+      </div>
+    </div>
+    <div class="fg" style="margin-top:12px;">
+      <label id="lbl_vf_photo">صورة الصيدلية</label>
+      <div id="vf-photo-container" style="border:1px solid var(--brd);border-radius:9px;padding:8px;text-align:center;background:var(--bg)"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" style="width:100%" onclick="cm('m-view-files')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Consultation Chat -->
+<div class="moverlay" id="m-cons-chat">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span><i class="fa-solid fa-comments"></i> محادثة الاستشارة</span>
+      <button class="btn-p" style="padding:6px 12px;font-size:12px;width:auto;" onclick="generateMeetLink()"><i class="fa-solid fa-video"></i> رابط فيديو</button>
+    </div>
+    <div id="cons-chat-box" style="height:350px;overflow-y:auto;background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:15px;display:flex;flex-direction:column;gap:10px;margin-bottom:15px;">
+      <!-- Messages here -->
+    </div>
+    <div style="display:flex;gap:10px;">
+      <input type="text" id="cons-chat-input" placeholder="اكتب رسالة..." style="flex:1;background:var(--bg);border:1px solid var(--brd);border-radius:11px;padding:12px 14px;font-family:'Cairo';outline:none;" onkeypress="if(event.key==='Enter') sendConsMessage()" />
+      <button class="btn-p" style="width:auto;padding:0 20px;" onclick="sendConsMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+    <div class="modal-foot" style="margin-top:15px;">
+      <button class="btn btn-sec" style="width:100%" onclick="cm('m-cons-chat')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
 const dict = {
   ar: {
-    title: "لوحة تحكم الصيدليات | HomeCare DZ", l_badge: "<i class='fa-solid fa-pills'></i> لوحة تحكم الصيدليات", l_title: "تسجيل الدخول", l_sub: "للمشرفين فقط · Admins only", l_sub2: "للمشرفين فقط · Admins only", lbl_email: "البريد الإلكتروني", lbl_pass: "كلمة المرور", l_btn: "دخول", sb_tag: "لوحة تحكم الصيدليات", sb_pill: "<i class='fa-solid fa-pills'></i> Pharmacy Dashboard", n_dash: "الإحصائيات", n_pharma: "الصيادلة", n_ord: "طلبات الأدوية", n_inv: "مخزن المنتجات", n_add: "إضافة صيدلاني", role_txt: "مدير النظام · Admin", logout_btn: "<i class='fa-solid fa-right-from-bracket'></i> تسجيل الخروج", pg_title: "الإحصائيات", pg_sub: "نظرة عامة", s_lbl1: "إجمالي الصيادلة", s_lbl2: "طلبات الأدوية", s_lbl3: "طلبات بانتظار الرد", s_lbl4: "منتجات في المخزن", d_title: "<i class='fa-solid fa-clipboard-list'></i> آخر طلبات الأدوية", th_p1: "المريض", th_m1: "الدواء", th_ph1: "الصيدلية", th_d1: "التاريخ", th_st1: "الحالة", p_title: "<i class='fa-solid fa-user-doctor'></i> الصيادلة", p_search: "بحث...", p_add_btn: "<i class='fa-solid fa-plus'></i> إضافة", f_all1: "الكل", f_appr: "<i class='fa-solid fa-check'></i> مقبول", f_pend: "<i class='fa-solid fa-hourglass-half'></i> بانتظار الموافقة", f_rej: "<i class='fa-solid fa-xmark'></i> مرفوض", th_pharma: "الصيدلاني", th_pharmacy: "الصيدلية", th_phone: "الهاتف", th_sales: "المبيعات", th_profit: "نسبة الربح", th_st2: "الحالة", th_act1: "الإجراءات", o_title: "<i class='fa-solid fa-clipboard-list'></i> طلبات الأدوية", o_search: "بحث...", f_all2: "الكل", f_pend2: "<i class='fa-solid fa-hourglass-half'></i> بانتظار", f_prep: "<i class='fa-solid fa-rotate'></i> جاري التحضير", f_comp: "<i class='fa-solid fa-check'></i> مكتمل", f_rej2: "<i class='fa-solid fa-xmark'></i> مرفوض", th_p2: "المريض", th_m2: "الدواء / الملاحظات", th_ph2: "الصيدلية", th_d2: "التاريخ", th_st3: "الحالة", th_act2: "الإجراءات", i_title: "<i class='fa-solid fa-box'></i> مخزن المنتجات", i_search: "بحث بالمنتج...", i_add_btn: "<i class='fa-solid fa-plus'></i> إضافة منتج", f_all3: "الكل", f_in: "<i class='fa-solid fa-check'></i> متوفر", f_low: "<i class='fa-solid fa-triangle-exclamation'></i> مخزون منخفض", f_out: "<i class='fa-solid fa-xmark'></i> نفد المخزون", th_prod: "المنتج", th_cat: "التصنيف", th_ph3: "الصيدلية", th_qty: "الكمية", th_pr: "السعر", th_st4: "حالة المخزون", th_act3: "الإجراءات", c_title: "<i class='fa-solid fa-plus'></i> إضافة صيدلاني جديد", c_desc: "أدخل بيانات الصيدلاني الجديد. سيتم تفعيل الحساب تلقائياً دون الحاجة لمراجعة إضافية.", c_note: "لا يمكن إنشاء حسابات صيدلاني من التطبيق، فقط من هنا.", lbl_c_name: "الاسم الكامل *", lbl_c_phone: "رقم الهاتف", lbl_c_email: "البريد الإلكتروني *", lbl_c_pass: "كلمة المرور *", lbl_c_pass2: "تأكيد كلمة المرور *", lbl_c_pname: "اسم الصيدلية *", lbl_c_paddr: "عنوان الصيدلية", lbl_c_profit: "نسبة الربح (%)", c_btn: "<i class='fa-solid fa-pills'></i> إنشاء الحساب", mi_title: "<i class='fa-solid fa-box'></i> إضافة منتج جديد", lbl_mi_ph: "الصيدلية *", lbl_mi_name: "اسم المنتج *", lbl_mi_cat: "التصنيف *", lbl_mi_stock: "الكمية *", lbl_mi_price: "السعر (دج) *", lbl_mi_desc: "الوصف (اختياري)", mi_save: "<i class='fa-solid fa-floppy-disk'></i> حفظ", mi_cancel: "إلغاء", ei_title: "<i class='fa-solid fa-pen'></i> تعديل المنتج", lbl_ei_name: "اسم المنتج *", lbl_ei_cat: "التصنيف *", lbl_ei_stock: "الكمية *", lbl_ei_price: "السعر (دج) *", ei_save: "<i class='fa-solid fa-floppy-disk'></i> حفظ التعديلات", ei_cancel: "إلغاء", js_admin: "المشرف", js_err_fill: "يرجى تعبئة جميع الحقول", js_logging: "<i class='fa-solid fa-hourglass-half'></i> جارٍ التحقق...", js_login_btn: "دخول", js_admin_only: "هذه اللوحة مخصصة للمشرفين فقط", js_pg_dash: "الإحصائيات", js_pg_dash_s: "نظرة عامة على الصيدليات", js_pg_pharma: "الصيادلة", js_pg_pharma_s: "إدارة حسابات الصيادلة", js_pg_ord: "طلبات الأدوية", js_pg_ord_s: "متابعة وإدارة طلبات الأدوية", js_pg_inv: "مخزن المنتجات", js_pg_inv_s: "عرض وإدارة مخزون الصيدليات", js_pg_add: "إضافة صيدلاني جديد", js_pg_add_s: "إنشاء حساب صيدلاني من لوحة التحكم", js_no_orders: "لا توجد طلبات حتى الآن", js_unknown: "مجهول", js_no_res: "لا توجد نتائج", js_no_prods: "لا توجد منتجات", js_req: "طلب", js_acc: "<i class='fa-solid fa-check'></i> قبول", js_rej: "<i class='fa-solid fa-xmark'></i> رفض", js_del: "<i class='fa-solid fa-trash'></i>", js_prep: "<i class='fa-solid fa-rotate'></i> قبول وتحضير", js_comp: "<i class='fa-solid fa-check'></i> إكمال", js_del_conf_ph: "هل أنت متأكد من حذف هذا الحساب نهائياً؟", js_del_conf_inv: "هل أنت متأكد من حذف هذا المنتج؟", js_all_ph: "كل الصيدليات", js_st_out: "<i class='fa-solid fa-xmark'></i> نفد", js_st_low: "<i class='fa-solid fa-triangle-exclamation'></i> منخفض", js_st_in: "<i class='fa-solid fa-check'></i> متوفر", js_load_ph_first: "يرجى تحميل الصيادلة أولاً", js_err_pass_match: "كلمتا المرور غير متطابقتين", js_err_pass_len: "كلمة المرور 6 أحرف على الأقل", js_err_email: "يرجى إدخال بريد إلكتروني صحيح", js_created: "<i class='fa-solid fa-check'></i> تم إنشاء حساب الصيدلاني بنجاح! الحساب مفعّل تلقائياً.", js_t_ph_acc: "<i class='fa-solid fa-check'></i> تم قبول الصيدلاني", js_t_ph_rej: "<i class='fa-solid fa-xmark'></i> تم رفض الصيدلاني", js_t_del: "<i class='fa-solid fa-check'></i> تم الحذف بنجاح", js_t_ord_upd: "<i class='fa-solid fa-check'></i> تم تحديث الطلب",       js_t_inv_add: "<i class='fa-solid fa-check'></i> تم إضافة المنتج", js_t_inv_upd: "<i class='fa-solid fa-check'></i> تم التعديل",
+    title: "لوحة تحكم الصيدليات | HomeCare DZ", l_badge: "<i class='fa-solid fa-pills'></i> لوحة تحكم الصيدليات", l_title: "تسجيل الدخول", l_sub: "للمشرفين فقط · Admins only", l_sub2: "للمشرفين فقط · Admins only", lbl_email: "البريد الإلكتروني", lbl_pass: "كلمة المرور", l_btn: "دخول", sb_tag: "لوحة تحكم الصيدليات", sb_pill: "<i class='fa-solid fa-pills'></i> Pharmacy Dashboard", n_dash: "الإحصائيات", n_pharma: "الصيادلة", n_ord: "طلبات الأدوية", n_inv: "مخزن المنتجات", n_add: "إضافة صيدلاني", role_txt: "مدير النظام · Admin", logout_btn: "<i class='fa-solid fa-right-from-bracket'></i> تسجيل الخروج", pg_title: "الإحصائيات", pg_sub: "نظرة عامة", s_lbl1: "إجمالي الصيادلة", s_lbl2: "طلبات الأدوية", s_lbl3: "طلبات بانتظار الرد", s_lbl4: "منتجات في المخزن", d_title: "<i class='fa-solid fa-clipboard-list'></i> آخر طلبات الأدوية", th_p1: "المريض", th_m1: "الدواء", th_ph1: "الصيدلية", th_d1: "التاريخ", th_st1: "الحالة", p_title: "<i class='fa-solid fa-user-doctor'></i> الصيادلة", p_search: "بحث...", p_add_btn: "<i class='fa-solid fa-plus'></i> إضافة", f_all1: "الكل", f_appr: "<i class='fa-solid fa-check'></i> مقبول", f_pend: "<i class='fa-solid fa-hourglass-half'></i> بانتظار الموافقة", f_rej: "<i class='fa-solid fa-xmark'></i> مرفوض", th_pharma: "الصيدلاني", th_pharmacy: "الصيدلية", th_phone: "الهاتف", th_sales: "المبيعات", th_profit: "نسبة الربح", th_st2: "الحالة", th_act1: "الإجراءات", o_title: "<i class='fa-solid fa-clipboard-list'></i> طلبات الأدوية", o_search: "بحث...", f_all2: "الكل", f_pend2: "<i class='fa-solid fa-hourglass-half'></i> بانتظار", f_prep: "<i class='fa-solid fa-rotate'></i> جاري التحضير", f_comp: "<i class='fa-solid fa-check'></i> مكتمل", f_rej2: "<i class='fa-solid fa-xmark'></i> مرفوض", th_p2: "المريض", th_m2: "الدواء / الملاحظات", th_ph2: "الصيدلية", th_d2: "التاريخ", th_st3: "الحالة", th_act2: "الإجراءات", i_title: "<i class='fa-solid fa-box'></i> مخزن المنتجات", i_search: "بحث بالمنتج...", i_add_btn: "<i class='fa-solid fa-plus'></i> إضافة منتج", f_all3: "الكل", f_in: "<i class='fa-solid fa-check'></i> متوفر", f_low: "<i class='fa-solid fa-triangle-exclamation'></i> مخزون منخفض", f_out: "<i class='fa-solid fa-xmark'></i> نفد المخزون", th_prod: "المنتج", th_cat: "التصنيف", th_ph3: "الصيدلية", th_qty: "الكمية", th_pr: "السعر", th_st4: "حالة المخزون", th_act3: "الإجراءات", c_title: "<i class='fa-solid fa-plus'></i> إضافة صيدلاني جديد", c_desc: "أدخل بيانات الصيدلاني الجديد. سيتم تفعيل الحساب تلقائياً دون الحاجة لمراجعة إضافية.", c_note: "لا يمكن إنشاء حسابات صيدلاني من التطبيق، فقط من هنا.", lbl_c_name: "الاسم الكامل *", lbl_c_phone: "رقم الهاتف", lbl_c_email: "البريد الإلكتروني *", lbl_c_pass: "كلمة المرور *", lbl_c_pass2: "تأكيد كلمة المرور *", lbl_c_pname: "اسم الصيدلية *", lbl_c_paddr: "عنوان الصيدلية", lbl_c_profit: "نسبة الربح (%)", c_btn: "<i class='fa-solid fa-pills'></i> إنشاء الحساب", mi_title: "<i class='fa-solid fa-box'></i> إضافة منتج جديد", lbl_mi_ph: "الصيدلية *", lbl_mi_name: "اسم المنتج *", lbl_mi_cat: "التصنيف *", lbl_mi_stock: "الكمية *", lbl_mi_price: "السعر (دج) *", lbl_mi_desc: "الوصف (اختياري)", mi_save: "<i class='fa-solid fa-floppy-disk'></i> حفظ", mi_cancel: "إلغاء", ei_title: "<i class='fa-solid fa-pen'></i> تعديل المنتج", lbl_ei_name: "اسم المنتج *", lbl_ei_cat: "التصنيف *", lbl_ei_stock: "الكمية *", lbl_ei_price: "السعر (دج) *", ei_save: "<i class='fa-solid fa-floppy-disk'></i> حفظ التعديلات", ei_cancel: "إلغاء", js_admin: "المشرف", js_err_fill: "يرجى تعبئة جميع الحقول", js_logging: "<i class='fa-solid fa-hourglass-half'></i> جارٍ التحقق...", js_login_btn: "دخول", js_admin_only: "هذه اللوحة مخصصة للمشرفين فقط", js_pg_dash: "الإحصائيات", js_pg_dash_s: "نظرة عامة على الصيدليات", js_pg_pharma: "الصيادلة", js_pg_pharma_s: "إدارة حسابات الصيادلة", js_pg_ord: "طلبات الأدوية", js_pg_ord_s: "متابعة وإدارة طلبات الأدوية", js_pg_inv: "مخزن المنتجات", js_pg_inv_s: "عرض وإدارة مخزون الصيدليات", js_pg_add: "إضافة صيدلاني جديد", js_pg_add_s: "إنشاء حساب صيدلاني من لوحة التحكم", js_no_orders: "لا توجد طلبات حتى الآن", js_unknown: "مجهول", js_no_res: "لا توجد نتائج", js_no_prods: "لا توجد منتجات", js_req: "طلب", js_acc: "<i class='fa-solid fa-check'></i> قبول", js_rej: "<i class='fa-solid fa-xmark'></i> رفض", js_del: "<i class='fa-solid fa-trash'></i>", js_prep: "<i class='fa-solid fa-rotate'></i> قبول وتحضير", js_comp: "<i class='fa-solid fa-check'></i> إكمال", js_del_conf_ph: "هل أنت متأكد من حذف هذا الحساب نهائياً؟", js_del_conf_inv: "هل أنت متأكد من حذف هذا المنتج؟", js_all_ph: "كل الصيدليات", js_st_out: "<i class='fa-solid fa-xmark'></i> نفد", js_st_low: "<i class='fa-solid fa-triangle-exclamation'></i> منخفض", js_st_in: "<i class='fa-solid fa-check'></i> متوفر", js_load_ph_first: "يرجى تحميل الصيادلة أولاً", js_err_pass_match: "كلمتا المرور غير متطابقتين", js_err_pass_len: "كلمة المرور 6 أحرف على الأقل", js_err_email: "يرجى إدخال بريد إلكتروني صحيح", js_created: "<i class='fa-solid fa-check'></i> تم إنشاء حساب الصيدلاني بنجاح! الحساب مفعّل تلقائياً.", js_t_ph_acc: "<i class='fa-solid fa-check'></i> تم قبول الصيدلاني", js_t_ph_rej: "<i class='fa-solid fa-xmark'></i> تم رفض الصيدلاني", js_t_del: "<i class='fa-solid fa-check'></i> تم الحذف بنجاح", js_t_ord_upd: "<i class='fa-solid fa-check'></i> تم تحديث الطلب",       js_t_inv_add: "<i class='fa-solid fa-check'></i> تم إضافة المنتج", js_t_inv_upd: "<i class='fa-solid fa-check'></i> تم التعديل", js_view_files: "<i class='fa-solid fa-folder-open'></i> عرض الملفات", vf_title: "<i class='fa-solid fa-folder-open'></i> ملفات الصيدلاني", lbl_vf_id: "بطاقة الهوية", lbl_vf_cert: "الشهادة المهنية", lbl_vf_photo: "صورة الصيدلية", vf_close: "إغلاق", js_no_file: "غير متوفر", js_view: "عرض",
       mn_dash_lbl: "لوحة", mn_pharma_lbl: "صيادلة", mn_ord_lbl: "طلبات", mn_inv_lbl: "مخزون", mn_add_lbl: "إضافة"
   },
   en: {
-    title: "Pharmacy Dashboard | HomeCare DZ", l_badge: "<i class='fa-solid fa-pills'></i> Pharmacy Dashboard", l_title: "Login", l_sub: "HomeCare DZ — Pharmacy Management", l_sub2: "Admins only", lbl_email: "Email", lbl_pass: "Password", l_btn: "Login", sb_tag: "Pharmacy Dashboard", sb_pill: "<i class='fa-solid fa-pills'></i> Pharmacy Dashboard", n_dash: "Dashboard", n_pharma: "Pharmacists", n_ord: "Orders", n_inv: "Inventory", n_add: "Add Pharmacist", role_txt: "Admin", logout_btn: "<i class='fa-solid fa-right-from-bracket'></i> Logout", pg_title: "Dashboard", pg_sub: "Overview", s_lbl1: "Total Pharmacists", s_lbl2: "Total Orders", s_lbl3: "Pending Orders", s_lbl4: "Products in Stock", d_title: "<i class='fa-solid fa-clipboard-list'></i> Recent Orders", th_p1: "Patient", th_m1: "Medicine", th_ph1: "Pharmacy", th_d1: "Date", th_st1: "Status", p_title: "<i class='fa-solid fa-user-doctor'></i> Pharmacists", p_search: "Search...", p_add_btn: "<i class='fa-solid fa-plus'></i> Add", f_all1: "All", f_appr: "<i class='fa-solid fa-check'></i> Approved", f_pend: "<i class='fa-solid fa-hourglass-half'></i> Pending", f_rej: "<i class='fa-solid fa-xmark'></i> Rejected", th_pharma: "Pharmacist", th_pharmacy: "Pharmacy", th_phone: "Phone", th_sales: "Sales", th_profit: "Margin", th_st2: "Status", th_act1: "Actions", o_title: "<i class='fa-solid fa-clipboard-list'></i> Orders", o_search: "Search...", f_all2: "All", f_pend2: "<i class='fa-solid fa-hourglass-half'></i> Pending", f_prep: "<i class='fa-solid fa-rotate'></i> Preparing", f_comp: "<i class='fa-solid fa-check'></i> Completed", f_rej2: "<i class='fa-solid fa-xmark'></i> Rejected", th_p2: "Patient", th_m2: "Medicine / Notes", th_ph2: "Pharmacy", th_d2: "Date", th_st3: "Status", th_act2: "Actions", i_title: "<i class='fa-solid fa-box'></i> Inventory", i_search: "Search Product...", i_add_btn: "<i class='fa-solid fa-plus'></i> Add Product", f_all3: "All", f_in: "<i class='fa-solid fa-check'></i> In Stock", f_low: "<i class='fa-solid fa-triangle-exclamation'></i> Low Stock", f_out: "<i class='fa-solid fa-xmark'></i> Out of Stock", th_prod: "Product", th_cat: "Category", th_ph3: "Pharmacy", th_qty: "Qty", th_pr: "Price", th_st4: "Stock Status", th_act3: "Actions", c_title: "<i class='fa-solid fa-plus'></i> Add New Pharmacist", c_desc: "Enter details. Account will activate automatically.", c_note: "Accounts can only be created here.", lbl_c_name: "Full Name *", lbl_c_phone: "Phone", lbl_c_email: "Email *", lbl_c_pass: "Password *", lbl_c_pass2: "Confirm Password *", lbl_c_pname: "Pharmacy Name *", lbl_c_paddr: "Address", lbl_c_profit: "Profit Margin (%)", c_btn: "<i class='fa-solid fa-pills'></i> Create Account", mi_title: "<i class='fa-solid fa-box'></i> Add New Product", lbl_mi_ph: "Pharmacy *", lbl_mi_name: "Product Name *", lbl_mi_cat: "Category *", lbl_mi_stock: "Quantity *", lbl_mi_price: "Price (DZD) *", lbl_mi_desc: "Description (Optional)", mi_save: "<i class='fa-solid fa-floppy-disk'></i> Save", mi_cancel: "Cancel", ei_title: "<i class='fa-solid fa-pen'></i> Edit Product", lbl_ei_name: "Product Name *", lbl_ei_cat: "Category *", lbl_ei_stock: "Quantity *", lbl_ei_price: "Price (DZD) *", ei_save: "<i class='fa-solid fa-floppy-disk'></i> Save Changes", ei_cancel: "Cancel", js_admin: "Admin", js_err_fill: "Please fill all required fields", js_logging: "<i class='fa-solid fa-hourglass-half'></i> Verifying...", js_login_btn: "Login", js_admin_only: "This dashboard is for admins only", js_pg_dash: "Dashboard", js_pg_dash_s: "Overview of pharmacies", js_pg_pharma: "Pharmacists", js_pg_pharma_s: "Manage accounts", js_pg_ord: "Orders", js_pg_ord_s: "Track and manage orders", js_pg_inv: "Inventory", js_pg_inv_s: "View and manage inventory", js_pg_add: "Add Pharmacist", js_pg_add_s: "Create an account", js_no_orders: "No orders yet", js_unknown: "Unknown", js_no_res: "No results", js_no_prods: "No products", js_req: "Orders", js_acc: "<i class='fa-solid fa-check'></i> Approve", js_rej: "<i class='fa-solid fa-xmark'></i> Reject", js_del: "<i class='fa-solid fa-trash'></i>", js_prep: "<i class='fa-solid fa-rotate'></i> Prepare", js_comp: "<i class='fa-solid fa-check'></i> Complete", js_del_conf_ph: "Are you sure you want to permanently delete this account?", js_del_conf_inv: "Are you sure you want to delete this product?", js_all_ph: "All Pharmacies", js_st_out: "<i class='fa-solid fa-xmark'></i> Out", js_st_low: "<i class='fa-solid fa-triangle-exclamation'></i> Low", js_st_in: "<i class='fa-solid fa-check'></i> In Stock", js_load_ph_first: "Please load pharmacists first", js_err_pass_match: "Passwords do not match", js_err_pass_len: "Password must be at least 6 characters", js_err_email: "Please enter a valid email", js_created: "<i class='fa-solid fa-check'></i> Account created successfully! It is active.", js_t_ph_acc: "<i class='fa-solid fa-check'></i> Pharmacist approved", js_t_ph_rej: "<i class='fa-solid fa-xmark'></i> Pharmacist rejected", js_t_del: "<i class='fa-solid fa-check'></i> Deleted successfully", js_t_ord_upd: "<i class='fa-solid fa-check'></i> Order updated",       js_t_inv_add: "<i class='fa-solid fa-check'></i> Product added", js_t_inv_upd: "<i class='fa-solid fa-check'></i> Product updated",
+    title: "Pharmacy Dashboard | HomeCare DZ", l_badge: "<i class='fa-solid fa-pills'></i> Pharmacy Dashboard", l_title: "Login", l_sub: "HomeCare DZ — Pharmacy Management", l_sub2: "Admins only", lbl_email: "Email", lbl_pass: "Password", l_btn: "Login", sb_tag: "Pharmacy Dashboard", sb_pill: "<i class='fa-solid fa-pills'></i> Pharmacy Dashboard", n_dash: "Dashboard", n_pharma: "Pharmacists", n_ord: "Orders", n_inv: "Inventory", n_add: "Add Pharmacist", role_txt: "Admin", logout_btn: "<i class='fa-solid fa-right-from-bracket'></i> Logout", pg_title: "Dashboard", pg_sub: "Overview", s_lbl1: "Total Pharmacists", s_lbl2: "Total Orders", s_lbl3: "Pending Orders", s_lbl4: "Products in Stock", d_title: "<i class='fa-solid fa-clipboard-list'></i> Recent Orders", th_p1: "Patient", th_m1: "Medicine", th_ph1: "Pharmacy", th_d1: "Date", th_st1: "Status", p_title: "<i class='fa-solid fa-user-doctor'></i> Pharmacists", p_search: "Search...", p_add_btn: "<i class='fa-solid fa-plus'></i> Add", f_all1: "All", f_appr: "<i class='fa-solid fa-check'></i> Approved", f_pend: "<i class='fa-solid fa-hourglass-half'></i> Pending", f_rej: "<i class='fa-solid fa-xmark'></i> Rejected", th_pharma: "Pharmacist", th_pharmacy: "Pharmacy", th_phone: "Phone", th_sales: "Sales", th_profit: "Margin", th_st2: "Status", th_act1: "Actions", o_title: "<i class='fa-solid fa-clipboard-list'></i> Orders", o_search: "Search...", f_all2: "All", f_pend2: "<i class='fa-solid fa-hourglass-half'></i> Pending", f_prep: "<i class='fa-solid fa-rotate'></i> Preparing", f_comp: "<i class='fa-solid fa-check'></i> Completed", f_rej2: "<i class='fa-solid fa-xmark'></i> Rejected", th_p2: "Patient", th_m2: "Medicine / Notes", th_ph2: "Pharmacy", th_d2: "Date", th_st3: "Status", th_act2: "Actions", i_title: "<i class='fa-solid fa-box'></i> Inventory", i_search: "Search Product...", i_add_btn: "<i class='fa-solid fa-plus'></i> Add Product", f_all3: "All", f_in: "<i class='fa-solid fa-check'></i> In Stock", f_low: "<i class='fa-solid fa-triangle-exclamation'></i> Low Stock", f_out: "<i class='fa-solid fa-xmark'></i> Out of Stock", th_prod: "Product", th_cat: "Category", th_ph3: "Pharmacy", th_qty: "Qty", th_pr: "Price", th_st4: "Stock Status", th_act3: "Actions", c_title: "<i class='fa-solid fa-plus'></i> Add New Pharmacist", c_desc: "Enter details. Account will activate automatically.", c_note: "Accounts can only be created here.", lbl_c_name: "Full Name *", lbl_c_phone: "Phone", lbl_c_email: "Email *", lbl_c_pass: "Password *", lbl_c_pass2: "Confirm Password *", lbl_c_pname: "Pharmacy Name *", lbl_c_paddr: "Address", lbl_c_profit: "Profit Margin (%)", c_btn: "<i class='fa-solid fa-pills'></i> Create Account", mi_title: "<i class='fa-solid fa-box'></i> Add New Product", lbl_mi_ph: "Pharmacy *", lbl_mi_name: "Product Name *", lbl_mi_cat: "Category *", lbl_mi_stock: "Quantity *", lbl_mi_price: "Price (DZD) *", lbl_mi_desc: "Description (Optional)", mi_save: "<i class='fa-solid fa-floppy-disk'></i> Save", mi_cancel: "Cancel", ei_title: "<i class='fa-solid fa-pen'></i> Edit Product", lbl_ei_name: "Product Name *", lbl_ei_cat: "Category *", lbl_ei_stock: "Quantity *", lbl_ei_price: "Price (DZD) *", ei_save: "<i class='fa-solid fa-floppy-disk'></i> Save Changes", ei_cancel: "Cancel", js_admin: "Admin", js_err_fill: "Please fill all required fields", js_logging: "<i class='fa-solid fa-hourglass-half'></i> Verifying...", js_login_btn: "Login", js_admin_only: "This dashboard is for admins only", js_pg_dash: "Dashboard", js_pg_dash_s: "Overview of pharmacies", js_pg_pharma: "Pharmacists", js_pg_pharma_s: "Manage accounts", js_pg_ord: "Orders", js_pg_ord_s: "Track and manage orders", js_pg_inv: "Inventory", js_pg_inv_s: "View and manage inventory", js_pg_add: "Add Pharmacist", js_pg_add_s: "Create an account", js_no_orders: "No orders yet", js_unknown: "Unknown", js_no_res: "No results", js_no_prods: "No products", js_req: "Orders", js_acc: "<i class='fa-solid fa-check'></i> Approve", js_rej: "<i class='fa-solid fa-xmark'></i> Reject", js_del: "<i class='fa-solid fa-trash'></i>", js_prep: "<i class='fa-solid fa-rotate'></i> Prepare", js_comp: "<i class='fa-solid fa-check'></i> Complete", js_del_conf_ph: "Are you sure you want to permanently delete this account?", js_del_conf_inv: "Are you sure you want to delete this product?", js_all_ph: "All Pharmacies", js_st_out: "<i class='fa-solid fa-xmark'></i> Out", js_st_low: "<i class='fa-solid fa-triangle-exclamation'></i> Low", js_st_in: "<i class='fa-solid fa-check'></i> In Stock", js_load_ph_first: "Please load pharmacists first", js_err_pass_match: "Passwords do not match", js_err_pass_len: "Password must be at least 6 characters", js_err_email: "Please enter a valid email", js_created: "<i class='fa-solid fa-check'></i> Account created successfully! It is active.", js_t_ph_acc: "<i class='fa-solid fa-check'></i> Pharmacist approved", js_t_ph_rej: "<i class='fa-solid fa-xmark'></i> Pharmacist rejected", js_t_del: "<i class='fa-solid fa-check'></i> Deleted successfully", js_t_ord_upd: "<i class='fa-solid fa-check'></i> Order updated",       js_t_inv_add: "<i class='fa-solid fa-check'></i> Product added", js_t_inv_upd: "<i class='fa-solid fa-check'></i> Product updated", js_view_files: "<i class='fa-solid fa-folder-open'></i> View Files", vf_title: "<i class='fa-solid fa-folder-open'></i> Pharmacist Files", lbl_vf_id: "Identity Card", lbl_vf_cert: "Professional Certificate", lbl_vf_photo: "Pharmacy Photo", vf_close: "Close", js_no_file: "Not available", js_view: "View",
       mn_dash_lbl: "Dash", mn_pharma_lbl: "Pharmas", mn_ord_lbl: "Orders", mn_inv_lbl: "Stock", mn_add_lbl: "Add"
   },
   fr: {
-    title: "Tableau de Bord | HomeCare DZ", l_badge: "<i class='fa-solid fa-pills'></i> Tableau de bord", l_title: "Connexion", l_sub: "HomeCare DZ — Gestion de Pharmacie", l_sub2: "Administrateurs uniquement", lbl_email: "E-mail", lbl_pass: "Mot de passe", l_btn: "Connexion", sb_tag: "Tableau de Bord", sb_pill: "<i class='fa-solid fa-pills'></i> Tableau de bord", n_dash: "Statistiques", n_pharma: "Pharmaciens", n_ord: "Commandes", n_inv: "Inventaire", n_add: "Ajouter Pharmacien", role_txt: "Administrateur", logout_btn: "<i class='fa-solid fa-right-from-bracket'></i> Déconnexion", pg_title: "Statistiques", pg_sub: "Aperçu", s_lbl1: "Total Pharmaciens", s_lbl2: "Total Commandes", s_lbl3: "En attente", s_lbl4: "Produits en stock", d_title: "<i class='fa-solid fa-clipboard-list'></i> Dernières Commandes", th_p1: "Patient", th_m1: "Médicament", th_ph1: "Pharmacie", th_d1: "Date", th_st1: "Statut", p_title: "<i class='fa-solid fa-user-doctor'></i> Pharmaciens", p_search: "Recherche...", p_add_btn: "<i class='fa-solid fa-plus'></i> Ajouter", f_all1: "Tous", f_appr: "<i class='fa-solid fa-check'></i> Approuvé", f_pend: "<i class='fa-solid fa-hourglass-half'></i> En attente", f_rej: "<i class='fa-solid fa-xmark'></i> Rejeté", th_pharma: "Pharmacien", th_pharmacy: "Pharmacie", th_phone: "Téléphone", th_sales: "Ventes", th_profit: "Marge", th_st2: "Statut", th_act1: "Actions", o_title: "<i class='fa-solid fa-clipboard-list'></i> Commandes", o_search: "Recherche...", f_all2: "Tous", f_pend2: "<i class='fa-solid fa-hourglass-half'></i> En attente", f_prep: "<i class='fa-solid fa-rotate'></i> Préparation", f_comp: "<i class='fa-solid fa-check'></i> Terminé", f_rej2: "<i class='fa-solid fa-xmark'></i> Rejeté", th_p2: "Patient", th_m2: "Méd. / Notes", th_ph2: "Pharmacie", th_d2: "Date", th_st3: "Statut", th_act2: "Actions", i_title: "<i class='fa-solid fa-box'></i> Inventaire", i_search: "Chercher produit...", i_add_btn: "<i class='fa-solid fa-plus'></i> Ajouter", f_all3: "Tous", f_in: "<i class='fa-solid fa-check'></i> En stock", f_low: "<i class='fa-solid fa-triangle-exclamation'></i> Stock faible", f_out: "<i class='fa-solid fa-xmark'></i> Rupture", th_prod: "Produit", th_cat: "Catégorie", th_ph3: "Pharmacie", th_qty: "Qté", th_pr: "Prix", th_st4: "Statut Stock", th_act3: "Actions", c_title: "<i class='fa-solid fa-plus'></i> Nouveau Pharmacien", c_desc: "Entrez les détails. Le compte sera activé automatiquement.", c_note: "Les comptes ne peuvent être créés qu'ici.", lbl_c_name: "Nom Complet *", lbl_c_phone: "Téléphone", lbl_c_email: "E-mail *", lbl_c_pass: "Mot de passe *", lbl_c_pass2: "Confirmer *", lbl_c_pname: "Nom Pharmacie *", lbl_c_paddr: "Adresse", lbl_c_profit: "Marge (%)", c_btn: "<i class='fa-solid fa-pills'></i> Créer Compte", mi_title: "<i class='fa-solid fa-box'></i> Ajouter Produit", lbl_mi_ph: "Pharmacie *", lbl_mi_name: "Nom Produit *", lbl_mi_cat: "Catégorie *", lbl_mi_stock: "Quantité *", lbl_mi_price: "Prix (DZD) *", lbl_mi_desc: "Description", mi_save: "<i class='fa-solid fa-floppy-disk'></i> Enregistrer", mi_cancel: "Annuler", ei_title: "<i class='fa-solid fa-pen'></i> Modifier Produit", lbl_ei_name: "Nom Produit *", lbl_ei_cat: "Catégorie *", lbl_ei_stock: "Quantité *", lbl_ei_price: "Prix (DZD) *", ei_save: "<i class='fa-solid fa-floppy-disk'></i> Enregistrer", ei_cancel: "Annuler", js_admin: "Admin", js_err_fill: "Veuillez remplir tous les champs", js_logging: "<i class='fa-solid fa-hourglass-half'></i> Vérification...", js_login_btn: "Connexion", js_admin_only: "Réservé aux administrateurs", js_pg_dash: "Statistiques", js_pg_dash_s: "Aperçu des pharmacies", js_pg_pharma: "Pharmaciens", js_pg_pharma_s: "Gérer les comptes", js_pg_ord: "Commandes", js_pg_ord_s: "Suivre les commandes", js_pg_inv: "Inventaire", js_pg_inv_s: "Voir l'inventaire", js_pg_add: "Ajouter Pharmacien", js_pg_add_s: "Créer un compte", js_no_orders: "Aucune commande", js_unknown: "Inconnu", js_no_res: "Aucun résultat", js_no_prods: "Aucun produit", js_req: "Cmds", js_acc: "<i class='fa-solid fa-check'></i> Approuver", js_rej: "<i class='fa-solid fa-xmark'></i> Rejeter", js_del: "<i class='fa-solid fa-trash'></i>", js_prep: "<i class='fa-solid fa-rotate'></i> Préparer", js_comp: "<i class='fa-solid fa-check'></i> Terminer", js_del_conf_ph: "Voulez-vous vraiment supprimer définitivement ce compte ?", js_del_conf_inv: "Voulez-vous vraiment supprimer ce produit ?", js_all_ph: "Toutes les pharmacies", js_st_out: "<i class='fa-solid fa-xmark'></i> Rupture", js_st_low: "<i class='fa-solid fa-triangle-exclamation'></i> Faible", js_st_in: "<i class='fa-solid fa-check'></i> En stock", js_load_ph_first: "Veuillez charger les pharmaciens", js_err_pass_match: "Les mots de passe ne correspondent pas", js_err_pass_len: "Minimum 6 caractères", js_err_email: "Email invalide", js_created: "<i class='fa-solid fa-check'></i> Compte créé avec succès ! Il est actif.", js_t_ph_acc: "<i class='fa-solid fa-check'></i> Pharmacien approuvé", js_t_ph_rej: "<i class='fa-solid fa-xmark'></i> Pharmacien rejeté", js_t_del: "<i class='fa-solid fa-check'></i> Supprimé avec succès", js_t_ord_upd: "<i class='fa-solid fa-check'></i> Commande mise à jour",       js_t_inv_add: "<i class='fa-solid fa-check'></i> Produit ajouté", js_t_inv_upd: "<i class='fa-solid fa-check'></i> Produit modifié",
+    title: "Tableau de Bord | HomeCare DZ", l_badge: "<i class='fa-solid fa-pills'></i> Tableau de bord", l_title: "Connexion", l_sub: "HomeCare DZ — Gestion de Pharmacie", l_sub2: "Administrateurs uniquement", lbl_email: "E-mail", lbl_pass: "Mot de passe", l_btn: "Connexion", sb_tag: "Tableau de Bord", sb_pill: "<i class='fa-solid fa-pills'></i> Tableau de bord", n_dash: "Statistiques", n_pharma: "Pharmaciens", n_ord: "Commandes", n_inv: "Inventaire", n_add: "Ajouter Pharmacien", role_txt: "Administrateur", logout_btn: "<i class='fa-solid fa-right-from-bracket'></i> Déconnexion", pg_title: "Statistiques", pg_sub: "Aperçu", s_lbl1: "Total Pharmaciens", s_lbl2: "Total Commandes", s_lbl3: "En attente", s_lbl4: "Produits en stock", d_title: "<i class='fa-solid fa-clipboard-list'></i> Dernières Commandes", th_p1: "Patient", th_m1: "Médicament", th_ph1: "Pharmacie", th_d1: "Date", th_st1: "Statut", p_title: "<i class='fa-solid fa-user-doctor'></i> Pharmaciens", p_search: "Recherche...", p_add_btn: "<i class='fa-solid fa-plus'></i> Ajouter", f_all1: "Tous", f_appr: "<i class='fa-solid fa-check'></i> Approuvé", f_pend: "<i class='fa-solid fa-hourglass-half'></i> En attente", f_rej: "<i class='fa-solid fa-xmark'></i> Rejeté", th_pharma: "Pharmacien", th_pharmacy: "Pharmacie", th_phone: "Téléphone", th_sales: "Ventes", th_profit: "Marge", th_st2: "Statut", th_act1: "Actions", o_title: "<i class='fa-solid fa-clipboard-list'></i> Commandes", o_search: "Recherche...", f_all2: "Tous", f_pend2: "<i class='fa-solid fa-hourglass-half'></i> En attente", f_prep: "<i class='fa-solid fa-rotate'></i> Préparation", f_comp: "<i class='fa-solid fa-check'></i> Terminé", f_rej2: "<i class='fa-solid fa-xmark'></i> Rejeté", th_p2: "Patient", th_m2: "Méd. / Notes", th_ph2: "Pharmacie", th_d2: "Date", th_st3: "Statut", th_act2: "Actions", i_title: "<i class='fa-solid fa-box'></i> Inventaire", i_search: "Chercher produit...", i_add_btn: "<i class='fa-solid fa-plus'></i> Ajouter", f_all3: "Tous", f_in: "<i class='fa-solid fa-check'></i> En stock", f_low: "<i class='fa-solid fa-triangle-exclamation'></i> Stock faible", f_out: "<i class='fa-solid fa-xmark'></i> Rupture", th_prod: "Produit", th_cat: "Catégorie", th_ph3: "Pharmacie", th_qty: "Qté", th_pr: "Prix", th_st4: "Statut Stock", th_act3: "Actions", c_title: "<i class='fa-solid fa-plus'></i> Nouveau Pharmacien", c_desc: "Entrez les détails. Le compte sera activé automatiquement.", c_note: "Les comptes ne peuvent être créés qu'ici.", lbl_c_name: "Nom Complet *", lbl_c_phone: "Téléphone", lbl_c_email: "E-mail *", lbl_c_pass: "Mot de passe *", lbl_c_pass2: "Confirmer *", lbl_c_pname: "Nom Pharmacie *", lbl_c_paddr: "Adresse", lbl_c_profit: "Marge (%)", c_btn: "<i class='fa-solid fa-pills'></i> Créer Compte", mi_title: "<i class='fa-solid fa-box'></i> Ajouter Produit", lbl_mi_ph: "Pharmacie *", lbl_mi_name: "Nom Produit *", lbl_mi_cat: "Catégorie *", lbl_mi_stock: "Quantité *", lbl_mi_price: "Prix (DZD) *", lbl_mi_desc: "Description", mi_save: "<i class='fa-solid fa-floppy-disk'></i> Enregistrer", mi_cancel: "Annuler", ei_title: "<i class='fa-solid fa-pen'></i> Modifier Produit", lbl_ei_name: "Nom Produit *", lbl_ei_cat: "Catégorie *", lbl_ei_stock: "Quantité *", lbl_ei_price: "Prix (DZD) *", ei_save: "<i class='fa-solid fa-floppy-disk'></i> Enregistrer", ei_cancel: "Annuler", js_admin: "Admin", js_err_fill: "Veuillez remplir tous les champs", js_logging: "<i class='fa-solid fa-hourglass-half'></i> Vérification...", js_login_btn: "Connexion", js_admin_only: "Réservé aux administrateurs", js_pg_dash: "Statistiques", js_pg_dash_s: "Aperçu des pharmacies", js_pg_pharma: "Pharmaciens", js_pg_pharma_s: "Gérer les comptes", js_pg_ord: "Commandes", js_pg_ord_s: "Suivre les commandes", js_pg_inv: "Inventaire", js_pg_inv_s: "Voir l'inventaire", js_pg_add: "Ajouter Pharmacien", js_pg_add_s: "Créer un compte", js_no_orders: "Aucune commande", js_unknown: "Inconnu", js_no_res: "Aucun résultat", js_no_prods: "Aucun produit", js_req: "Cmds", js_acc: "<i class='fa-solid fa-check'></i> Approuver", js_rej: "<i class='fa-solid fa-xmark'></i> Rejeter", js_del: "<i class='fa-solid fa-trash'></i>", js_prep: "<i class='fa-solid fa-rotate'></i> Préparer", js_comp: "<i class='fa-solid fa-check'></i> Terminer", js_del_conf_ph: "Voulez-vous vraiment supprimer définitivement ce compte ?", js_del_conf_inv: "Voulez-vous vraiment supprimer ce produit ?", js_all_ph: "Toutes les pharmacies", js_st_out: "<i class='fa-solid fa-xmark'></i> Rupture", js_st_low: "<i class='fa-solid fa-triangle-exclamation'></i> Faible", js_st_in: "<i class='fa-solid fa-check'></i> En stock", js_load_ph_first: "Veuillez charger les pharmaciens", js_err_pass_match: "Les mots de passe ne correspondent pas", js_err_pass_len: "Minimum 6 caractères", js_err_email: "Email invalide", js_created: "<i class='fa-solid fa-check'></i> Compte créé avec succès ! Il est actif.", js_t_ph_acc: "<i class='fa-solid fa-check'></i> Pharmacien approuvé", js_t_ph_rej: "<i class='fa-solid fa-xmark'></i> Pharmacien rejeté", js_t_del: "<i class='fa-solid fa-check'></i> Supprimé avec succès", js_t_ord_upd: "<i class='fa-solid fa-check'></i> Commande mise à jour",       js_t_inv_add: "<i class='fa-solid fa-check'></i> Produit ajouté", js_t_inv_upd: "<i class='fa-solid fa-check'></i> Produit modifié", js_view_files: "<i class='fa-solid fa-folder-open'></i> Fichiers", vf_title: "<i class='fa-solid fa-folder-open'></i> Fichiers du pharmacien", lbl_vf_id: "Carte d'identité", lbl_vf_cert: "Certificat Professionnel", lbl_vf_photo: "Photo de Pharmacie", vf_close: "Fermer", js_no_file: "Non disponible", js_view: "Voir",
       mn_dash_lbl: "Tableau", mn_pharma_lbl: "Pharmas", mn_ord_lbl: "Cmds", mn_inv_lbl: "Stock", mn_add_lbl: "Ajouter"
   }
 };
@@ -682,6 +775,8 @@ function go(name,el){
   if(name==='pharmacists')loadPharmas();
   if(name==='orders')loadOrders();
   if(name==='inventory')loadInvPage();
+  if(name==='labs')loadLabs();
+  if(name==='consultations')loadConsultations();
 }
 
 // ─── API ───────────────────────────────────────────────────────
@@ -742,11 +837,38 @@ function renderPharmas(){
     <td><span class="badge b-accepted">${p.profitPercent||10}%</span></td>
     <td>${sb(p.status==='approved'?'approved':p.status)}</td>
     <td><div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="btn btn-info" onclick="viewPharmaFiles('${p._id}')">${txt('js_view_files')}</button>
       ${p.status!=='approved'?`<button class="btn btn-green" onclick="pharmAct('${p._id}','approve')">${txt('js_acc')}</button>`:''}
       ${p.status!=='rejected'?`<button class="btn btn-amber" onclick="pharmAct('${p._id}','reject')">${txt('js_rej')}</button>`:''}
       <button class="btn btn-red" onclick="delPharma('${p._id}')">${txt('js_del')}</button>
     </div></td>
   </tr>`).join('');
+}
+
+function viewPharmaFiles(id) {
+  const p = allPharmas.find(x => x._id === id);
+  if (!p) return;
+  
+  const renderFile = (url) => {
+    if (!url) return `<span style="color:var(--text-muted);font-size:12px;">${txt('js_no_file')}</span>`;
+    const fullUrl = url.startsWith('http') ? url : API.replace('/api', '') + url;
+    const lUrl = fullUrl.toLowerCase();
+    
+    let html = '';
+    if (lUrl.endsWith('.pdf') || lUrl.includes('pdf')) {
+      html = `<iframe src="${fullUrl}" style="width:100%;height:250px;border:none;border-radius:6px;background:#fff;margin-bottom:8px;"></iframe>`;
+    } else if (lUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) || lUrl.includes('image')) {
+      html = `<a href="${fullUrl}" target="_blank"><img src="${fullUrl}" style="max-width:100%;max-height:250px;border-radius:6px;display:block;margin:0 auto 8px;" alt="File" /></a>`;
+    }
+    
+    return `${html}<a href="${fullUrl}" target="_blank" class="btn btn-sec" style="display:inline-block;">${txt('js_view')}</a>`;
+  };
+
+  document.getElementById('vf-id-container').innerHTML = renderFile(p.identityCardUrl);
+  document.getElementById('vf-cert-container').innerHTML = renderFile(p.certificateUrl);
+  document.getElementById('vf-photo-container').innerHTML = renderFile(p.pharmacyPhotoUrl);
+  
+  document.getElementById('m-view-files').classList.add('open');
 }
 
 function setPF(f,el){pf=f;document.querySelectorAll('#page-pharmacists .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderPharmas()}
@@ -798,17 +920,13 @@ async function updOrd(id,status){
 
 // ─── INVENTORY ──────────────────────────────────────────────────
 async function loadInvPage(){
-  if(!allPharmas.length)try{allPharmas=await GET('/users/pharmacists')}catch{}
-  const sel=document.getElementById('inv-pf');
-  sel.innerHTML='<option value="">'+txt('js_all_ph')+'</option>'+allPharmas.map(p=>`<option value="${p._id}">${p.pharmacyName||p.name}</option>`).join('');
   await loadInv();
 }
 
 async function loadInv(){
-  document.getElementById('inv-tbody').innerHTML=`<tr><td colspan="7"><div class="lc"><div class="spin"></div></div></td></tr>`;
-  const pid=document.getElementById('inv-pf').value;
-  try{allInv=await GET('/inventory/admin'+(pid?`?pharmacistId=${pid}`:''));renderInv()}
-  catch(e){document.getElementById('inv-tbody').innerHTML=`<tr><td colspan="7" class="empty">${txt('js_no_prods')}</td></tr>`}
+  document.getElementById('inv-tbody').innerHTML=`<tr><td colspan="6"><div class="lc"><div class="spin"></div></div></td></tr>`;
+  try{allInv=await GET('/inventory/admin');renderInv()}
+  catch(e){document.getElementById('inv-tbody').innerHTML=`<tr><td colspan="6" class="empty">${txt('js_no_prods')}</td></tr>`}
 }
 
 function renderInv(){
@@ -818,16 +936,14 @@ function renderInv(){
   else if(inf==='low')list=list.filter(i=>i.stock>0&&i.stock<=10);
   else if(inf==='in')list=list.filter(i=>i.stock>10);
   if(q)list=list.filter(i=>i.name.toLowerCase().includes(q)||(i.category||'').toLowerCase().includes(q));
-  const pm={};allPharmas.forEach(p=>{pm[p._id]=p.pharmacyName||p.name});
   const tb=document.getElementById('inv-tbody');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="7" class="empty">${txt('js_no_prods')}</td></tr>`;return}
+  if(!list.length){tb.innerHTML=`<tr><td colspan="6" class="empty">${txt('js_no_prods')}</td></tr>`;return}
   tb.innerHTML=list.map(i=>{
     const stk=i.stock;
     const stBadge=stk===0?`<span class="badge b-out">${txt('js_st_out')}</span>`:stk<=10?`<span class="badge b-low">${txt('js_st_low')} (${stk})</span>`:`<span class="badge b-in">${txt('js_st_in')} (${stk})</span>`;
     return`<tr>
       <td><strong>${esc(i.name)}</strong></td>
       <td><span class="badge b-accepted">${esc(i.category)}</span></td>
-      <td>${esc(pm[i.pharmacistId]||'—')}</td>
       <td style="font-weight:700">${stk}</td>
       <td style="color:var(--gr);font-weight:700">${i.price} دج</td>
       <td>${stBadge}</td>
@@ -842,14 +958,12 @@ function renderInv(){
 function setIF(f,el){inf=f;document.querySelectorAll('#page-inventory .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderInv()}
 
 function openAddInv(){
-  if(!allPharmas.length){toast(txt('js_load_ph_first'),'error');return}
-  document.getElementById('mi-pharma').innerHTML=allPharmas.map(p=>`<option value="${p._id}">${p.pharmacyName||p.name}</option>`).join('');
   ['mi-name','mi-cat','mi-stock','mi-price','mi-desc'].forEach(id=>document.getElementById(id).value='');
   om('m-add-inv');
 }
 
 async function saveInvItem(){
-  const pid=document.getElementById('mi-pharma').value;
+  const pid='global';
   const name=document.getElementById('mi-name').value.trim();
   const cat=document.getElementById('mi-cat').value.trim();
   const stock=parseInt(document.getElementById('mi-stock').value);
@@ -884,6 +998,147 @@ async function delInv(id){
   if(!confirm(txt('js_del_conf_inv')))return;
   try{await DEL(`/inventory/admin/${id}`);toast(txt('js_t_del'),'success');await loadInv()}
   catch(e){toast(e.message,'error')}
+}
+
+// ─── LABS ────────────────────────────────────────────────────────
+let allLabs=[], lf='all';
+async function loadLabs(){
+  document.getElementById('lab-tbody').innerHTML=`<tr><td colspan="6"><div class="lc"><div class="spin"></div></div></td></tr>`;
+  try{allLabs=await GET('/users/labs');renderLabs();}
+  catch(e){document.getElementById('lab-tbody').innerHTML=`<tr><td colspan="6" class="empty">لا توجد نتائج</td></tr>`;}
+}
+function renderLabs(){
+  const q=document.getElementById('lab_search').value.toLowerCase();
+  let list=allLabs;
+  if(lf!=='all')list=list.filter(l=>l.status===lf);
+  if(q)list=list.filter(l=>l.name.toLowerCase().includes(q)||(l.labName||'').toLowerCase().includes(q));
+  const tb=document.getElementById('lab-tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="6" class="empty">لا توجد نتائج</td></tr>`;return;}
+  tb.innerHTML=list.map(l=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:9px">
+      <div class="av" style="background:linear-gradient(135deg,#10b981,#059669)">${l.name.charAt(0)}</div>
+      <div><div style="font-weight:700">${esc(l.name)}</div><div style="font-size:11px;color:var(--text-muted)">${esc(l.email||'')}</div></div>
+    </div></td>
+    <td>${esc(l.labName||'—')}</td>
+    <td>${esc(l.labAddress||'—')}</td>
+    <td dir="ltr" style="text-align:right">${esc(l.phone||'—')}</td>
+    <td>${sb(l.status==='approved'?'approved':l.status)}</td>
+    <td><div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="btn btn-info" onclick="viewLabFiles('${l._id}')"><i class='fa-solid fa-folder-open'></i> عرض الملفات</button>
+      ${l.status!=='approved'?`<button class="btn btn-green" onclick="labAct('${l._id}','approve')"><i class='fa-solid fa-check'></i> قبول</button>`:''}
+      ${l.status!=='rejected'?`<button class="btn btn-amber" onclick="labAct('${l._id}','reject')"><i class='fa-solid fa-xmark'></i> رفض</button>`:''}
+      <button class="btn btn-red" onclick="delLab('${l._id}')"><i class='fa-solid fa-trash'></i></button>
+    </div></td>
+  </tr>`).join('');
+}
+function viewLabFiles(id){
+  const l=allLabs.find(x=>x._id===id);
+  if(!l)return;
+  const renderFile=(url)=>{
+    if(!url)return `<span style="color:var(--text-muted);font-size:12px;">غير متوفر</span>`;
+    const fullUrl=url.startsWith('http')?url:API.replace('/api','')+url;
+    const lUrl=fullUrl.toLowerCase();
+    let html='';
+    if(lUrl.endsWith('.pdf')||lUrl.includes('pdf')){
+      html=`<iframe src="${fullUrl}" style="width:100%;height:250px;border:none;border-radius:6px;background:#fff;margin-bottom:8px;"></iframe>`;
+    }else if(lUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i)||lUrl.includes('image')){
+      html=`<a href="${fullUrl}" target="_blank"><img src="${fullUrl}" style="max-width:100%;max-height:250px;border-radius:6px;display:block;margin:0 auto 8px;" alt="File" /></a>`;
+    }
+    return `${html}<a href="${fullUrl}" target="_blank" class="btn btn-sec" style="display:inline-block;">عرض</a>`;
+  };
+  // Reuse the view-files modal with lab info
+  document.getElementById('vf-id-container').innerHTML=renderFile(l.identityCardUrl);
+  document.getElementById('vf-cert-container').innerHTML=renderFile(l.certificateUrl);
+  document.getElementById('vf-photo-container').innerHTML=renderFile(l.pharmacyPhotoUrl);
+  document.getElementById('m-view-files').classList.add('open');
+}
+function setLF(f,el){lf=f;document.querySelectorAll('#page-labs .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderLabs();}
+async function labAct(id,act){
+  try{await PUT(`/users/labs/${id}/${act}`);toast(act==='approve'?'<i class="fa-solid fa-check"></i> تم قبول المخبر':'<i class="fa-solid fa-xmark"></i> تم رفض المخبر',act==='approve'?'success':'error');await loadLabs();}
+  catch(e){toast(e.message,'error');}
+}
+async function delLab(id){
+  if(!confirm('هل أنت متأكد من حذف هذا الحساب نهائياً؟'))return;
+  try{await DEL(`/users/${id}`);toast('<i class="fa-solid fa-check"></i> تم الحذف بنجاح','success');await loadLabs();}
+  catch(e){toast(e.message,'error');}
+}
+
+// ─── CONSULTATIONS ────────────────────────────────────────────────────────
+let allCons=[], cf='all';
+async function loadConsultations(){
+  document.getElementById('cons-tbody').innerHTML=`<tr><td colspan="5"><div class="lc"><div class="spin"></div></div></td></tr>`;
+  try{allCons=await GET('/consultations');renderConsultations();}
+  catch(e){document.getElementById('cons-tbody').innerHTML=`<tr><td colspan="5" class="empty">لا توجد نتائج</td></tr>`;}
+}
+function renderConsultations(){
+  const q=document.getElementById('cons_search').value.toLowerCase();
+  let list=allCons;
+  if(cf!=='all')list=list.filter(c=>c.paymentStatus===cf);
+  if(q)list=list.filter(c=>c.patientId?.name?.toLowerCase().includes(q) || c.description.toLowerCase().includes(q));
+  const tb=document.getElementById('cons-tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="5" class="empty">لا توجد نتائج</td></tr>`;return;}
+  tb.innerHTML=list.map(c=>`<tr>
+    <td>${new Date(c.createdAt).toLocaleDateString('ar-DZ')}</td>
+    <td><div style="display:flex;align-items:center;gap:9px">
+      <div class="av" style="background:linear-gradient(135deg,#6366f1,#0ea5e9)">${(c.patientId?.name||'?').charAt(0)}</div>
+      <div><div style="font-weight:700">${esc(c.patientId?.name||'مريض محذوف')}</div><div style="font-size:11px;color:var(--text-muted)">${esc(c.description||'').substring(0,30)}...</div></div>
+    </div></td>
+    <td>${c.paymentStatus==='paid'?sb('مدفوعة','approved'):c.paymentStatus==='skipped'?sb('متخطى','pending'):sb('بانتظار الدفع','rejected')}</td>
+    <td>${c.status==='completed'?sb('مكتملة','approved'):c.status==='in_progress'?sb('قيد المعالجة','pending'):sb('جديدة')}</td>
+    <td><div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="openConsChat('${c._id}')"><i class='fa-solid fa-comments'></i> مراسلة</button>
+    </div></td>
+  </tr>`).join('');
+}
+function setCF(f,el){cf=f;document.querySelectorAll('#page-consultations .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderConsultations();}
+
+let activeConsId = null;
+async function openConsChat(id){
+  activeConsId = id;
+  document.getElementById('m-cons-chat').classList.add('open');
+  loadConsMessages();
+}
+async function loadConsMessages(){
+  if(!activeConsId) return;
+  const box = document.getElementById('cons-chat-box');
+  box.innerHTML = '<div class="lc"><div class="spin"></div></div>';
+  try {
+    const msgs = await GET('/messages/consultation/'+activeConsId);
+    if(msgs.length === 0) {
+      box.innerHTML = '<div style="text-align:center;color:var(--text-muted);margin:auto;font-size:13px">لا توجد رسائل بعد. يمكنك بدء المحادثة أو إرسال رابط فيديو.</div>';
+      return;
+    }
+    box.innerHTML = msgs.map(m => {
+      const isMe = m.sender && m.sender.role === 'admin';
+      return `<div style="display:flex;justify-content:${isMe?'flex-end':'flex-start'}">
+        <div style="max-width:80%;padding:10px 14px;border-radius:12px;background:${isMe?'var(--ac)':'var(--bg)'};color:${isMe?'#fff':'var(--text)'};font-size:13px;line-height:1.5;border:1px solid ${isMe?'var(--ac)':'var(--brd)'}">
+          ${isMe?'':`<strong style="display:block;font-size:11px;color:var(--text-muted);margin-bottom:4px;">${m.sender?.name||'المريض'}</strong>`}
+          ${esc(m.content).replace(/\n/g, '<br>')}
+        </div>
+      </div>`;
+    }).join('');
+    box.scrollTop = box.scrollHeight;
+  } catch(e) {
+    box.innerHTML = '<div style="text-align:center;color:var(--rd);margin:auto;font-size:13px">حدث خطأ أثناء تحميل الرسائل</div>';
+  }
+}
+async function sendConsMessage(){
+  if(!activeConsId) return;
+  const inp = document.getElementById('cons-chat-input');
+  const txtStr = inp.value.trim();
+  if(!txtStr) return;
+  inp.value = '';
+  try {
+    await POST('/messages/consultation/'+activeConsId, { content: txtStr });
+    loadConsMessages();
+  } catch(e) { toast('فشل إرسال الرسالة', 'error'); }
+}
+function generateMeetLink(){
+  const meetId = Math.random().toString(36).substring(2, 12);
+  const link = \`https://meet.jit.si/HomeCareDZ_\${meetId}\`;
+  const inp = document.getElementById('cons-chat-input');
+  inp.value = \`الرجاء الانضمام إلى الاستشارة المرئية عبر هذا الرابط:\\n\${link}\`;
+  inp.focus();
 }
 
 // ─── CREATE PHARMACIST ──────────────────────────────────────────
